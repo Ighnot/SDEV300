@@ -18,6 +18,7 @@ app.secret_key = '123456789'
 USER_DATA_FILE = 'user_data.txt'
 
 
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     """
     Register users and store their information in a text file after validation.
@@ -29,33 +30,41 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        confirm_password = request.form['confirm_password']
 
-        # Check if the username already exists in the file
-        with open(USER_DATA_FILE, 'r', encoding='utf-8') as file:
-            for line in file:
-                stored_username, _ = line.strip().split(':')
-                if username == stored_username:
-                    flash('Username already exists. Please choose another username or return '
-                          'to Login via below link.', 'error')
-                    return render_template('register.html')
-
-        # Validate password complexity
-        if not (len(password) >= 12 and any(c.isupper() for c in password)
-                and any(c.islower() for c in password) and any(c.isdigit() for c in password)
-                and any(not c.isalnum() for c in password)):
-            flash('Password does not meet complexity requirements', 'error')
+        # Check if password and confirm_password match
+        if password != confirm_password:
+            flash('Password and confirm password do not match. Please try again.',
+                  'error')
         else:
-            # Hash the password before storing it (for security)
-            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+            # Check if the username already exists in the file (read mode)
+            with open(USER_DATA_FILE, 'r', encoding='utf-8') as file:
+                for line in file:
+                    stored_username, _ = line.strip().split(':')
+                    if username == stored_username:
+                        flash('Username already exists. Choose another username or return'
+                              ' to Login via below link.', 'error')
+                        return render_template('register.html')
 
-            # Write user data to the file (append mode)
-            with open(USER_DATA_FILE, 'a', encoding='utf-8') as file:
-                file.write(f'{username}:{hashed_password}\n')
-                flash('Registered! Return to Login below.', 'success')
+            # Validate password complexity
+            if not (len(password) >= 9 and any(c.isupper() for c in password)
+                    and any(c.islower() for c in password) and any(c.isdigit() for c in password)
+                    and any(not c.isalnum() for c in password)):
+                flash('Password does not meet complexity requirements', 'error')
+            else:
+                # Hash the password before storing it (for security)
+                hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+                # Write user data to the file (append mode)
+                with open(USER_DATA_FILE, 'a', encoding='utf-8') as file:
+                    file.write(f'{username}:{hashed_password}\n')
+                    flash('Registered! Return to Login below.', 'success')
 
     return render_template('register.html')
 
 
+
+@app.route('/login', methods=['POST', 'GET'])
 def login():
     """
     Authenticate users and log them in if valid credentials are provided.
@@ -87,6 +96,7 @@ def login():
     return render_template('login.html', reg_message=reg_message)
 
 
+@app.route('/')
 def home():
     """
     Render the home page of the astronomy website.
@@ -103,6 +113,7 @@ def home():
     return render_template('index.html', current_time=current_time)
 
 
+@app.route('/telescope_time')
 def telescope_time():
     """
     Render the telescope time sign-up page.
@@ -117,6 +128,7 @@ def telescope_time():
     return render_template('telescope_time.html')
 
 
+@app.route('/supercomputer_time')
 def supercomputer_time():
     """
     Render the supercomputer time request page.
@@ -131,6 +143,7 @@ def supercomputer_time():
     return render_template('supercomputer_time.html')
 
 
+@app.route('/planetarium')
 def planetarium():
     """
     Render the planetarium volunteer page.
@@ -145,6 +158,7 @@ def planetarium():
     return render_template('planetarium.html')
 
 
+@app.route('/logout')
 def logout():
     """
     Log users out by clearing their session data.
@@ -154,7 +168,7 @@ def logout():
     """
     # Clear the user's session data to log them out
     session.clear()
-    flash('Logout Successful!', 'success')
+    flash('Logout Successful - See you next time!', 'success')
     return redirect(url_for('login'))
 
 
