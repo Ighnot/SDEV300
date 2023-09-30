@@ -56,7 +56,7 @@ li::before {
   position: absolute;
   top: 0;
   left: 0;
-  width: 220px; /* Adjust the width as needed */
+  width: 220px;
   height: 100%;
   background-color: rgba(200, 200, 200, 0.2); /* Adjust the background color and transparency */
   z-index: -1; /* Place it behind the content */
@@ -72,8 +72,6 @@ li a {
 li span {
   color: #333; /* Text color */
 }
-
-
 
 
 p {
@@ -94,7 +92,9 @@ form {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     max-width: 400px;
     margin: 0 auto;
-    margin-top: 20px;
+    /* margin-left: -100px; */
+    margin-top: 55px;
+    z-index: 9999;
 }
 
 label {
@@ -162,6 +162,44 @@ a:hover {
     width: 400px;
     height: 400px;
     margin: 50px;
+    z-index: 1;
 }
 
+/* Style for flash messages */
+.flash-messages {
+    width: 47.5ch;
+    /* display: none; /* Initially hide the flash messages */
+    /* background-color: #333333; /* Background color for the flash messages */
+    color: white; /* Text color for the flash messages */
+    text-align: center; /* Center-align the text inside the flash messages */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    padding: 10px; /* Add some padding to the flash messages */
+    position: fixed; /* Fixed position at the top of the screen */
+    top: 60px;
+    left: calc(50% - 25ch);
+    right: 0;
+    z-index: 9999; /* Ensure flash messages are on top of other content */
+}
+
+
+.flash-message {
+    margin-bottom: 5px;
+}
+
+/* Style for the logout link */
+.logout-link {
+    position: relative;
+    top: 0;
+    bottom: 10px;
+    left: 10px;
+}
+
+.logout-link a {
+    text-decoration: none;
+    color: #007BFF; /* Adjust link color */
+}
+
+.logout-link a:hover {
+    text-decoration: underline;
+}
 

@@ -1,11 +1,31 @@
+<!-- Code from: templates/login.html -->
 <!DOCTYPE html>
 <html lang="">
 <head>
-    <title>Login to the Application</title>
+    <title>Login to the Astronomy Portal</title>
     <link rel="stylesheet" href="../static/styles.css">
 </head>
 <body>
-    <h1 class="center-heading">Login</h1>
+    <h1 class="center-heading">Login to the Astronomy Portal</h1>
+
+<!-- Jinja2 sorcery to display flash messages -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+    {% if reg_message %}
+    <div class="flash-message">
+        {{ reg_message }}
+    </div>
+    {% endif %}
+
+
     <form method="post">
         <table>
             <tr>
@@ -21,5 +41,6 @@
             </tr>
         </table>
     </form>
+    <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
 </body>
 </html>
