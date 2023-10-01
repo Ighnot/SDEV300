@@ -24,7 +24,7 @@ def register():
     Register users and store their information in a text file after validation.
 
     Returns:
-        rendered template for registration page with flash messages
+        rendered template for the registration page with flash messages
     """
     flash('', 'error')  # Clears existing flash messages for the session, if any
     if request.method == 'POST':
@@ -47,10 +47,13 @@ def register():
                         return render_template('register.html')
 
             # Validate password complexity
-            if not (len(password) >= 9 and any(c.isupper() for c in password)
+            if not (len(password) >= 12 and any(c.isupper() for c in password)
                     and any(c.islower() for c in password) and any(c.isdigit() for c in password)
                     and any(not c.isalnum() for c in password)):
                 flash('Password does not meet complexity requirements', 'error')
+            # Check for spaces in username and password
+            elif ' ' in username or ' ' in password:
+                flash('Username and password cannot contain spaces.', 'error')
             else:
                 # Hash the password before storing it (for security)
                 hashed_password = hashlib.sha256(password.encode()).hexdigest()
@@ -61,7 +64,6 @@ def register():
                     flash('Registered! Return to Login below.', 'success')
 
     return render_template('register.html')
-
 
 
 @app.route('/login', methods=['POST', 'GET'])
